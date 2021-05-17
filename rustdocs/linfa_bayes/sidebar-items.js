@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["BayesError","An error when using a GaussianNB classifier"]],"struct":[["GaussianNbParams","Gaussian Naive Bayes (GaussianNB)"]],"type":[["Result",""]]});

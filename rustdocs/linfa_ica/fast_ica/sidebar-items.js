@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["GFunc","Some standard non-linear functions"]],"struct":[["FastIca","Fast Independent Component Analysis (ICA)"],["FittedFastIca","Fitted FastICA model for recovering the sources"]]});

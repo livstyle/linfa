@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="linfa,ml,stats,statistical learning, machine learning,rust">
+  <meta name="description" content="comprehensive toolkit for statistical learning in rust">
+  <title>Linfa Toolkit</title>
+
+  <link rel="icon" href="mascot.svg">
+  <link rel="stylesheet" href="https://rust-ml.github.io/linfa/style.css">
+  <script src="https://rust-ml.github.io/linfa/code-examples.js"></script>
+</head>
+
+<body>
+  <div class="top">
+      <section class="grid header">
+          <div class="logo">
+              <img alt="logo" src="https://rust-ml.github.io/linfa/mascot.svg" height=60>
+            <p>
+                Linfa
+                
+                <span>Menu</span>
+            </p>
+          </div>
+          <div class="header-main">
+              <ul>
+                  <li><a href="https://rust-ml.github.io/linfa">Home</a></li>
+                  <li><a href="https://rust-ml.github.io/linfa/about">About</a></li>
+                  <li><a href="https://rust-ml.github.io/linfa/docs">Documentation</a></li>
+                  <li><a href="https://rust-ml.github.io/linfa/community">Community</a></li>
+                  <li><a href="https://rust-ml.github.io/linfa/news">News</a></li>
+              </ul>
+          </div>
+      </section>
+  </div>
+
+
+  <section class="section">
+    <div class="container">
+      
+<div class="grid">
+    <div class="news_grid">
+        <span>
+            <h1 class="title">
+                Cross Validation
+            </h1>
+            <pre style="background-color:#ffffff;">
+<code class="language-rust" data-lang="rust"><span style="font-style:italic;color:#969896;">// parameters to compare
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> ratios </span><span style="font-weight:bold;color:#a71d5d;">= </span><span style="color:#323232;">vec![</span><span style="color:#0086b3;">0.1</span><span style="color:#323232;">, </span><span style="color:#0086b3;">0.2</span><span style="color:#323232;">, </span><span style="color:#0086b3;">0.5</span><span style="color:#323232;">, </span><span style="color:#0086b3;">0.7</span><span style="color:#323232;">, </span><span style="color:#0086b3;">1.0</span><span style="color:#323232;">];
+
+</span><span style="font-style:italic;color:#969896;">// create a model for each parameter
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> models </span><span style="font-weight:bold;color:#a71d5d;">=</span><span style="color:#323232;"> ratios
+    .</span><span style="color:#62a35c;">iter</span><span style="color:#323232;">()
+    .</span><span style="color:#62a35c;">map</span><span style="color:#323232;">(|ratio| ElasticNet::params().</span><span style="color:#62a35c;">penalty</span><span style="color:#323232;">(</span><span style="color:#0086b3;">0.3</span><span style="color:#323232;">).</span><span style="color:#62a35c;">l1_ratio</span><span style="color:#323232;">(</span><span style="font-weight:bold;color:#a71d5d;">*</span><span style="color:#323232;">ratio))
+    .collect::&lt;</span><span style="color:#0086b3;">Vec</span><span style="color:#323232;">&lt;</span><span style="font-weight:bold;color:#a71d5d;">_</span><span style="color:#323232;">&gt;&gt;();
+
+</span><span style="font-style:italic;color:#969896;">// get the mean r2 validation score across 5 folds for each model
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> r2_values </span><span style="font-weight:bold;color:#a71d5d;">=
+</span><span style="color:#323232;">    dataset.</span><span style="color:#62a35c;">cross_validate</span><span style="color:#323232;">(</span><span style="color:#0086b3;">5</span><span style="color:#323232;">, </span><span style="font-weight:bold;color:#a71d5d;">&amp;</span><span style="color:#323232;">models, |prediction, truth| prediction.</span><span style="color:#62a35c;">r2</span><span style="color:#323232;">(</span><span style="font-weight:bold;color:#a71d5d;">&amp;</span><span style="color:#323232;">truth))</span><span style="font-weight:bold;color:#a71d5d;">?</span><span style="color:#323232;">;
+
+</span><span style="font-style:italic;color:#969896;">// show the mean r2 score for each parameter choice
+</span><span style="font-weight:bold;color:#a71d5d;">for </span><span style="color:#323232;">(ratio, r2) </span><span style="font-weight:bold;color:#a71d5d;">in</span><span style="color:#323232;"> ratios.</span><span style="color:#62a35c;">iter</span><span style="color:#323232;">().</span><span style="color:#62a35c;">zip</span><span style="color:#323232;">(r2_values.</span><span style="color:#62a35c;">iter</span><span style="color:#323232;">()) {
+    println!(</span><span style="color:#183691;">&quot;L1 ratio: </span><span style="color:#0086b3;">{}</span><span style="color:#183691;">, r2 score: </span><span style="color:#0086b3;">{}</span><span style="color:#183691;">&quot;</span><span style="color:#323232;">, ratio, r2);
+}
+</span></code></pre>
+        </span>
+        <div class="sitelinks">
+            <h3>Latest news</h3>
+            
+            
+            <a href="https:&#x2F;&#x2F;rust-ml.github.io&#x2F;linfa&#x2F;news&#x2F;release040&#x2F;">Release 0.4.0</a>
+            
+            <a href="https:&#x2F;&#x2F;rust-ml.github.io&#x2F;linfa&#x2F;news&#x2F;release-031&#x2F;">Release 0.3.1</a>
+            
+            <a href="https:&#x2F;&#x2F;rust-ml.github.io&#x2F;linfa&#x2F;news&#x2F;new-website&#x2F;">New website</a>
+            
+            <a href="https:&#x2F;&#x2F;rust-ml.github.io&#x2F;linfa&#x2F;news&#x2F;release-030&#x2F;">Release 0.3.0</a>
+            
+            <a href="https:&#x2F;&#x2F;rust-ml.github.io&#x2F;linfa&#x2F;news&#x2F;release-021&#x2F;">Release 0.2.1</a>
+            
+            <a href="https:&#x2F;&#x2F;rust-ml.github.io&#x2F;linfa&#x2F;news&#x2F;first-release&#x2F;">Release 0.2.0</a>
+            
+        </div>
+    </div>
+</div>
+
+    </div>
+  </section>
+  <div class="bottom"><div class="grid">
+      <div class="footer">View
+          <a href="https://github.com/rust-ml/linfa/tree/master/docs/website">page source</a>
+          - any contribution is welcome!
+      </div>
+  </div></div>
+</body>
+</html>

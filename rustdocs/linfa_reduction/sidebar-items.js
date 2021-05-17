@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["diffusion_map","Diffusion Map"],["error",""],["pca","Principal Component Analysis"],["utils",""]],"struct":[["DiffusionMap","Embedding of diffusion map technique"]]});

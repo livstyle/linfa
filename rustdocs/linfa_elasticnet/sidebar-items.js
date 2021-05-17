@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Error",""]],"struct":[["ElasticNet","Elastic Net model"],["ElasticNetParams","Linear regression with both L1 and L2 regularization"]],"type":[["Result",""]]});

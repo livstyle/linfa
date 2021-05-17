@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="linfa,ml,stats,statistical learning, machine learning,rust">
+  <meta name="description" content="comprehensive toolkit for statistical learning in rust">
+  <title>Linfa Toolkit</title>
+
+  <link rel="icon" href="mascot.svg">
+  <link rel="stylesheet" href="https://rust-ml.github.io/linfa/style.css">
+  <script src="https://rust-ml.github.io/linfa/code-examples.js"></script>
+</head>
+
+<body>
+  <div class="top">
+      <section class="grid header">
+          <div class="logo">
+              <img alt="logo" src="https://rust-ml.github.io/linfa/mascot.svg" height=60>
+            <p>
+                Linfa
+                
+                <span>Menu</span>
+            </p>
+          </div>
+          <div class="header-main">
+              <ul>
+                  <li><a href="https://rust-ml.github.io/linfa">Home</a></li>
+                  <li><a href="https://rust-ml.github.io/linfa/about">About</a></li>
+                  <li><a href="https://rust-ml.github.io/linfa/docs">Documentation</a></li>
+                  <li><a href="https://rust-ml.github.io/linfa/community">Community</a></li>
+                  <li><a href="https://rust-ml.github.io/linfa/news">News</a></li>
+              </ul>
+          </div>
+      </section>
+  </div>
+
+
+  <section class="section">
+    <div class="container">
+      
+<div class="grid">
+    <div class="news_grid">
+        <span>
+            <h1 class="title">
+                Barnes-Hut t-SNE
+            </h1>
+            <pre style="background-color:#ffffff;">
+<code class="language-rust" data-lang="rust"><span style="font-style:italic;color:#969896;">// normalize the iris dataset
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> ds </span><span style="font-weight:bold;color:#a71d5d;">= </span><span style="color:#323232;">linfa_datasets::iris();
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> ds </span><span style="font-weight:bold;color:#a71d5d;">= </span><span style="color:#323232;">Pca::params(</span><span style="color:#0086b3;">3</span><span style="color:#323232;">).</span><span style="color:#62a35c;">whiten</span><span style="color:#323232;">(</span><span style="color:#0086b3;">true</span><span style="color:#323232;">).</span><span style="color:#62a35c;">fit</span><span style="color:#323232;">(</span><span style="font-weight:bold;color:#a71d5d;">&amp;</span><span style="color:#323232;">ds).</span><span style="color:#62a35c;">transform</span><span style="color:#323232;">(ds);
+
+</span><span style="font-style:italic;color:#969896;">// transform to two-dimensional embeddings
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> ds </span><span style="font-weight:bold;color:#a71d5d;">= </span><span style="color:#323232;">TSne::embedding_size(</span><span style="color:#0086b3;">2</span><span style="color:#323232;">)
+    .</span><span style="color:#62a35c;">perplexity</span><span style="color:#323232;">(</span><span style="color:#0086b3;">10.0</span><span style="color:#323232;">)
+    .</span><span style="color:#62a35c;">approx_threshold</span><span style="color:#323232;">(</span><span style="color:#0086b3;">0.1</span><span style="color:#323232;">)
+    .</span><span style="color:#62a35c;">transform</span><span style="color:#323232;">(ds)</span><span style="font-weight:bold;color:#a71d5d;">?</span><span style="color:#323232;">;
+
+</span><span style="font-style:italic;color:#969896;">// write embedding to file
+</span><span style="font-weight:bold;color:#a71d5d;">let mut</span><span style="color:#323232;"> f </span><span style="font-weight:bold;color:#a71d5d;">= </span><span style="color:#323232;">File::create(</span><span style="color:#183691;">&quot;iris.dat&quot;</span><span style="color:#323232;">)</span><span style="font-weight:bold;color:#a71d5d;">?</span><span style="color:#323232;">;
+</span><span style="font-weight:bold;color:#a71d5d;">for </span><span style="color:#323232;">(x, y) </span><span style="font-weight:bold;color:#a71d5d;">in</span><span style="color:#323232;"> ds.</span><span style="color:#62a35c;">sample_iter</span><span style="color:#323232;">() {
+    f.</span><span style="color:#62a35c;">write</span><span style="color:#323232;">(format!(</span><span style="color:#183691;">&quot;</span><span style="color:#0086b3;">{} {} {}\n</span><span style="color:#183691;">&quot;</span><span style="color:#323232;">, x[</span><span style="color:#0086b3;">0</span><span style="color:#323232;">], x[</span><span style="color:#0086b3;">1</span><span style="color:#323232;">], y[</span><span style="color:#0086b3;">0</span><span style="color:#323232;">]).</span><span style="color:#62a35c;">as_bytes</span><span style="color:#323232;">())</span><span style="font-weight:bold;color:#a71d5d;">?</span><span style="color:#323232;">;
+}
+</span></code></pre>
+        </span>
+        <div class="sitelinks">
+            <h3>Latest news</h3>
+            
+            
+            <a href="https:&#x2F;&#x2F;rust-ml.github.io&#x2F;linfa&#x2F;news&#x2F;release040&#x2F;">Release 0.4.0</a>
+            
+            <a href="https:&#x2F;&#x2F;rust-ml.github.io&#x2F;linfa&#x2F;news&#x2F;release-031&#x2F;">Release 0.3.1</a>
+            
+            <a href="https:&#x2F;&#x2F;rust-ml.github.io&#x2F;linfa&#x2F;news&#x2F;new-website&#x2F;">New website</a>
+            
+            <a href="https:&#x2F;&#x2F;rust-ml.github.io&#x2F;linfa&#x2F;news&#x2F;release-030&#x2F;">Release 0.3.0</a>
+            
+            <a href="https:&#x2F;&#x2F;rust-ml.github.io&#x2F;linfa&#x2F;news&#x2F;release-021&#x2F;">Release 0.2.1</a>
+            
+            <a href="https:&#x2F;&#x2F;rust-ml.github.io&#x2F;linfa&#x2F;news&#x2F;first-release&#x2F;">Release 0.2.0</a>
+            
+        </div>
+    </div>
+</div>
+
+    </div>
+  </section>
+  <div class="bottom"><div class="grid">
+      <div class="footer">View
+          <a href="https://github.com/rust-ml/linfa/tree/master/docs/website">page source</a>
+          - any contribution is welcome!
+      </div>
+  </div></div>
+</body>
+</html>

@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["ExitReason","Reason for stopping"]],"mod":[["error",""],["solver_smo",""]],"struct":[["Svm","Fitted Support Vector Machines model"],["SvmParams","SVM Hyperparameters"]]});

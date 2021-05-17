@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["PlsError",""]],"struct":[["PlsCanonical",""],["PlsCanonicalParams",""],["PlsCca",""],["PlsCcaParams",""],["PlsRegression",""],["PlsRegressionParams",""],["PlsSvd",""],["PlsSvdParams",""]],"trait":[["Float","Add Scalar and Lapack trait bounds to the common Float trait"]],"type":[["Result",""]]});

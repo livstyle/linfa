@@ -1,0 +1,66 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="`linfa-clustering` aims to provide pure Rust implementations of popular clustering algorithms."><meta name="keywords" content="rust, rustlang, rust-lang, linfa_clustering"><title>linfa_clustering - Rust</title><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../ayu.css" disabled ><script id="default-settings"></script><script src="../storage.js"></script><script src="../crates.js"></script><noscript><link rel="stylesheet" href="../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../down-arrow.svg");}</style></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../linfa_clustering/index.html'><div class='logo-container rust-logo'><img src='../rust-logo.png' alt='logo'></div></a><p class="location">Crate linfa_clustering</p><div class="block version"><p>Version 0.4.0</p></div><div class="sidebar-elems"><a id="all-types" href="all.html"><p>See all linfa_clustering's items</p></a><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#functions">Functions</a></li></ul></div><p class="location"></p><div id="sidebar-vars" data-name="linfa_clustering" data-ty="mod" data-relpath="../"></div></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><script src="../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
+                <a id="settings-menu" href="../settings.html"><img src="../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class="fqn"><span class="in-band">Crate <a class="mod" href="">linfa_clustering</a></span><span class="out-of-band"><span id="render-detail"><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span><a class="srclink" href="../src/linfa_clustering/lib.rs.html#1-37" title="goto source code">[src]</a></span></h1><div class="docblock"><p><code>linfa-clustering</code> aims to provide pure Rust implementations
+of popular clustering algorithms.</p>
+<h2 id="the-big-picture" class="section-header"><a href="#the-big-picture">The big picture</a></h2>
+<p><code>linfa-clustering</code> is a crate in the <code>linfa</code> ecosystem, a wider effort to
+bootstrap a toolkit for classical Machine Learning implemented in pure Rust,
+kin in spirit to Python’s <code>scikit-learn</code>.</p>
+<p>You can find a roadmap (and a selection of good first issues)
+<a href="https://github.com/LukeMathWalker/linfa/issues">here</a> - contributors are more than welcome!</p>
+<h2 id="current-state" class="section-header"><a href="#current-state">Current state</a></h2>
+<p>Right now <code>linfa-clustering</code> provides the following clustering algorithms:</p>
+<ul>
+<li><a href="struct.KMeans.html">K-Means</a></li>
+<li><a href="struct.Dbscan.html">DBSCAN</a></li>
+<li><a href="struct.AppxDbscan.html">Approximated DBSCAN</a></li>
+<li><a href="struct.GaussianMixtureModel.html">Gaussian-Mixture-Model</a></li>
+</ul>
+<p>Implementation choices, algorithmic details and tutorials can be found in the page dedicated to the specific algorithms.</p>
+<p>Additionally, this crate provides the <a href="fn.generate_blobs.html"><code>generate_blobs</code></a> utility to quickly generate test datasets for clustering.</p>
+<p>Check <a href="https://github.com/LukeMathWalker/clustering-benchmarks">here</a> for extensive benchmarks against <code>scikit-learn</code>’s K-means implementation.</p>
+</div><h2 id="structs" class="section-header"><a href="#structs">Structs</a></h2>
+<table><tr class="module-item"><td><a class="struct" href="struct.AppxDbscan.html" title="linfa_clustering::AppxDbscan struct">AppxDbscan</a></td><td class="docblock-short"><p>DBSCAN (Density-based Spatial Clustering of Applications with Noise)
+clusters together neighbouring points, while points in sparse regions are labelled
+as noise. Since points may be part of a cluster or noise the transform method returns
+<code>Array1&lt;Option&lt;usize&gt;&gt;</code>. It should be noted that some “border” points may technically
+belong to more than one cluster but, since the transform function returns only one
+label per point (if any), then only one cluster is chosen arbitrarily for those points.</p>
+</td></tr><tr class="module-item"><td><a class="struct" href="struct.AppxDbscanHyperParams.html" title="linfa_clustering::AppxDbscanHyperParams struct">AppxDbscanHyperParams</a></td><td class="docblock-short"><p>The set of hyperparameters that can be specified for the execution of
+the <a href="struct.AppxDbscan.html">Approximated DBSCAN algorithm</a>.</p>
+</td></tr><tr class="module-item"><td><a class="struct" href="struct.AppxDbscanHyperParamsBuilder.html" title="linfa_clustering::AppxDbscanHyperParamsBuilder struct">AppxDbscanHyperParamsBuilder</a></td><td class="docblock-short"><p>Helper struct used to construct a set of hyperparameters for the approximated DBSCAN algorithm</p>
+</td></tr><tr class="module-item"><td><a class="struct" href="struct.AppxDbscanLabeler.html" title="linfa_clustering::AppxDbscanLabeler struct">AppxDbscanLabeler</a></td><td class="docblock-short"><p>Struct that labels a set of points according to
+the Approximated DBSCAN algorithm</p>
+</td></tr><tr class="module-item"><td><a class="struct" href="struct.Dbscan.html" title="linfa_clustering::Dbscan struct">Dbscan</a></td><td class="docblock-short"><p>DBSCAN (Density-based Spatial Clustering of Applications with Noise)
+clusters together points which are close together with enough neighbors
+labelled points which are sparsely neighbored as noise. As points may be
+part of a cluster or noise the predict method returns
+<code>Array1&lt;Option&lt;usize&gt;&gt;</code></p>
+</td></tr><tr class="module-item"><td><a class="struct" href="struct.DbscanHyperParams.html" title="linfa_clustering::DbscanHyperParams struct">DbscanHyperParams</a></td><td class="docblock-short"><p>The set of hyperparameters that can be specified for the execution of
+the <a href="struct.Dbscan.html">DBSCAN algorithm</a>.</p>
+</td></tr><tr class="module-item"><td><a class="struct" href="struct.DbscanHyperParamsBuilder.html" title="linfa_clustering::DbscanHyperParamsBuilder struct">DbscanHyperParamsBuilder</a></td><td class="docblock-short"><p>Helper struct used to construct a set of hyperparameters for <a href="struct.Dbscan.html">DBSCAN algorithm</a>.</p>
+</td></tr><tr class="module-item"><td><a class="struct" href="struct.GaussianMixtureModel.html" title="linfa_clustering::GaussianMixtureModel struct">GaussianMixtureModel</a></td><td class="docblock-short"><p>Gaussian Mixture Model (GMM) aims at clustering a dataset by finding normally
+distributed sub datasets (hence the Gaussian Mixture name) .</p>
+</td></tr><tr class="module-item"><td><a class="struct" href="struct.GmmHyperParams.html" title="linfa_clustering::GmmHyperParams struct">GmmHyperParams</a></td><td class="docblock-short"><p>The set of hyperparameters that can be specified for the execution of
+the <a href="struct.GaussianMixtureModel.html">GMM algorithm</a>.</p>
+</td></tr><tr class="module-item"><td><a class="struct" href="struct.KMeans.html" title="linfa_clustering::KMeans struct">KMeans</a></td><td class="docblock-short"><p>K-means clustering aims to partition a set of unlabeled observations into clusters,
+where each observation belongs to the cluster with the nearest mean.</p>
+</td></tr><tr class="module-item"><td><a class="struct" href="struct.KMeansHyperParams.html" title="linfa_clustering::KMeansHyperParams struct">KMeansHyperParams</a></td><td class="docblock-short"><p>The set of hyperparameters that can be specified for the execution of
+the <a href="struct.KMeans.html">K-means algorithm</a>.</p>
+</td></tr><tr class="module-item"><td><a class="struct" href="struct.KMeansHyperParamsBuilder.html" title="linfa_clustering::KMeansHyperParamsBuilder struct">KMeansHyperParamsBuilder</a></td><td class="docblock-short"><p>An helper struct used to construct a set of <a href="struct.KMeansHyperParams.html">valid hyperparameters</a> for
+the <a href="struct.KMeans.html">K-means algorithm</a> (using the builder pattern).</p>
+</td></tr></table><h2 id="enums" class="section-header"><a href="#enums">Enums</a></h2>
+<table><tr class="module-item"><td><a class="enum" href="enum.GmmCovarType.html" title="linfa_clustering::GmmCovarType enum">GmmCovarType</a></td><td class="docblock-short"><p>A specifier for the type of the relation between components’ covariances.</p>
+</td></tr><tr class="module-item"><td><a class="enum" href="enum.GmmError.html" title="linfa_clustering::GmmError enum">GmmError</a></td><td class="docblock-short"><p>An error when modeling a GMM algorithm</p>
+</td></tr><tr class="module-item"><td><a class="enum" href="enum.GmmInitMethod.html" title="linfa_clustering::GmmInitMethod enum">GmmInitMethod</a></td><td class="docblock-short"><p>A specifier for the method used for the initialization of the fitting algorithm of GMM</p>
+</td></tr><tr class="module-item"><td><a class="enum" href="enum.KMeansError.html" title="linfa_clustering::KMeansError enum">KMeansError</a></td><td class="docblock-short"><p>An error when modeling a KMeans algorithm</p>
+</td></tr><tr class="module-item"><td><a class="enum" href="enum.KMeansInit.html" title="linfa_clustering::KMeansInit enum">KMeansInit</a></td><td class="docblock-short"><p>Specifies centroid initialization algorithm for KMeans.</p>
+</td></tr></table><h2 id="functions" class="section-header"><a href="#functions">Functions</a></h2>
+<table><tr class="module-item"><td><a class="fn" href="fn.compute_inertia.html" title="linfa_clustering::compute_inertia fn">compute_inertia</a></td><td class="docblock-short"><p>We compute inertia defined as the sum of the squared distances
+of the closest centroid for all observations.</p>
+</td></tr><tr class="module-item"><td><a class="fn" href="fn.generate_blob.html" title="linfa_clustering::generate_blob fn">generate_blob</a></td><td class="docblock-short"><p>Generate <code>blob_size</code> data points (a “blob”) around <code>blob_centroid</code>.</p>
+</td></tr><tr class="module-item"><td><a class="fn" href="fn.generate_blobs.html" title="linfa_clustering::generate_blobs fn">generate_blobs</a></td><td class="docblock-short"><p>Given an input matrix <code>blob_centroids</code>, with shape <code>(n_blobs, n_features)</code>,
+generate <code>blob_size</code> data points (a “blob”) around each of the blob centroids.</p>
+</td></tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><div id="rustdoc-vars" data-root-path="../" data-current-crate="linfa_clustering" data-search-js="../search-index.js"></div>
+    <script src="../main.js"></script></body></html>

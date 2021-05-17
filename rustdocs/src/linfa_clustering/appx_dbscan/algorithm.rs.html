@@ -1,0 +1,293 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `algorithms/linfa-clustering/src/appx_dbscan/algorithm.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>algorithm.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../linfa_clustering/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
+                <a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<span id="2">  2</span>
+<span id="3">  3</span>
+<span id="4">  4</span>
+<span id="5">  5</span>
+<span id="6">  6</span>
+<span id="7">  7</span>
+<span id="8">  8</span>
+<span id="9">  9</span>
+<span id="10"> 10</span>
+<span id="11"> 11</span>
+<span id="12"> 12</span>
+<span id="13"> 13</span>
+<span id="14"> 14</span>
+<span id="15"> 15</span>
+<span id="16"> 16</span>
+<span id="17"> 17</span>
+<span id="18"> 18</span>
+<span id="19"> 19</span>
+<span id="20"> 20</span>
+<span id="21"> 21</span>
+<span id="22"> 22</span>
+<span id="23"> 23</span>
+<span id="24"> 24</span>
+<span id="25"> 25</span>
+<span id="26"> 26</span>
+<span id="27"> 27</span>
+<span id="28"> 28</span>
+<span id="29"> 29</span>
+<span id="30"> 30</span>
+<span id="31"> 31</span>
+<span id="32"> 32</span>
+<span id="33"> 33</span>
+<span id="34"> 34</span>
+<span id="35"> 35</span>
+<span id="36"> 36</span>
+<span id="37"> 37</span>
+<span id="38"> 38</span>
+<span id="39"> 39</span>
+<span id="40"> 40</span>
+<span id="41"> 41</span>
+<span id="42"> 42</span>
+<span id="43"> 43</span>
+<span id="44"> 44</span>
+<span id="45"> 45</span>
+<span id="46"> 46</span>
+<span id="47"> 47</span>
+<span id="48"> 48</span>
+<span id="49"> 49</span>
+<span id="50"> 50</span>
+<span id="51"> 51</span>
+<span id="52"> 52</span>
+<span id="53"> 53</span>
+<span id="54"> 54</span>
+<span id="55"> 55</span>
+<span id="56"> 56</span>
+<span id="57"> 57</span>
+<span id="58"> 58</span>
+<span id="59"> 59</span>
+<span id="60"> 60</span>
+<span id="61"> 61</span>
+<span id="62"> 62</span>
+<span id="63"> 63</span>
+<span id="64"> 64</span>
+<span id="65"> 65</span>
+<span id="66"> 66</span>
+<span id="67"> 67</span>
+<span id="68"> 68</span>
+<span id="69"> 69</span>
+<span id="70"> 70</span>
+<span id="71"> 71</span>
+<span id="72"> 72</span>
+<span id="73"> 73</span>
+<span id="74"> 74</span>
+<span id="75"> 75</span>
+<span id="76"> 76</span>
+<span id="77"> 77</span>
+<span id="78"> 78</span>
+<span id="79"> 79</span>
+<span id="80"> 80</span>
+<span id="81"> 81</span>
+<span id="82"> 82</span>
+<span id="83"> 83</span>
+<span id="84"> 84</span>
+<span id="85"> 85</span>
+<span id="86"> 86</span>
+<span id="87"> 87</span>
+<span id="88"> 88</span>
+<span id="89"> 89</span>
+<span id="90"> 90</span>
+<span id="91"> 91</span>
+<span id="92"> 92</span>
+<span id="93"> 93</span>
+<span id="94"> 94</span>
+<span id="95"> 95</span>
+<span id="96"> 96</span>
+<span id="97"> 97</span>
+<span id="98"> 98</span>
+<span id="99"> 99</span>
+<span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+</pre><div class="example-wrap"><pre class="rust ">
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">appx_dbscan</span>::<span class="ident">clustering</span>::<span class="ident">AppxDbscanLabeler</span>;
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">appx_dbscan</span>::<span class="ident">hyperparameters</span>::{<span class="ident">AppxDbscanHyperParams</span>, <span class="ident">AppxDbscanHyperParamsBuilder</span>};
+<span class="kw">use</span> <span class="ident">linfa</span>::<span class="ident">traits</span>::<span class="ident">Transformer</span>;
+<span class="kw">use</span> <span class="ident">linfa</span>::{<span class="ident">DatasetBase</span>, <span class="ident">Float</span>};
+<span class="kw">use</span> <span class="ident">ndarray</span>::{<span class="ident">Array1</span>, <span class="ident">ArrayBase</span>, <span class="ident">Data</span>, <span class="ident">Ix2</span>};
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;serde&quot;</span>)]</span>
+<span class="kw">use</span> <span class="ident">serde_crate</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+
+<span class="attribute">#[<span class="ident">cfg_attr</span>(
+    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;serde&quot;</span>,
+    <span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>),
+    <span class="ident">serde</span>(<span class="kw">crate</span> <span class="op">=</span> <span class="string">&quot;serde_crate&quot;</span>)
+)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="doccomment">/// DBSCAN (Density-based Spatial Clustering of Applications with Noise)</span>
+<span class="doccomment">/// clusters together neighbouring points, while points in sparse regions are labelled</span>
+<span class="doccomment">/// as noise. Since points may be part of a cluster or noise the transform method returns</span>
+<span class="doccomment">/// `Array1&lt;Option&lt;usize&gt;&gt;`. It should be noted that some &quot;border&quot; points may technically</span>
+<span class="doccomment">/// belong to more than one cluster but, since the transform function returns only one</span>
+<span class="doccomment">/// label per point (if any), then only one cluster is chosen arbitrarily for those points.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// As DBSCAN groups together points in dense regions, the number of clusters is</span>
+<span class="doccomment">/// determined by the dataset and distance tolerance not the user.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This is an implementation of the approximated version of DBSCAN with</span>
+<span class="doccomment">/// complexity O(N). Additional information can be found in</span>
+<span class="doccomment">/// [this paper](https://www.cse.cuhk.edu.hk/~taoyf/paper/tods17-dbscan.pdf).</span>
+<span class="doccomment">/// Beware of the hidden constant `O((1/slack)^dimensionality)` of the complexity</span>
+<span class="doccomment">/// for very small values of `slack` and high dimensionalities.</span>
+<span class="doccomment">/// The approximated version of the DBSCAN converges to the exact DBSCAN result</span>
+<span class="doccomment">/// for a `slack` that goes to zero. Since only the `tranform` method is provided and</span>
+<span class="doccomment">/// border points are not assigned deterministically, it may happen that the two</span>
+<span class="doccomment">/// results still differ (in terms of border points) for very small values</span>
+<span class="doccomment">/// of `slack`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ## The algorithm</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Let `d` be the the number of features of each point:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// * The d-dimensional space is divided in a grid of cells, each containing the points of the dataset that fall</span>
+<span class="doccomment">///   inside of them.</span>
+<span class="doccomment">/// * All points that have at least `min_points` points in their neighbourhood of size `tolerance` are labeled as &quot;core points&quot;. Every</span>
+<span class="doccomment">///   cell containing at least one &quot;core point&quot; is labeled as a &quot;core-cell&quot;.</span>
+<span class="doccomment">/// * All &quot;core cells&quot; are set as vertexes of a graph and an arc is built between any two &quot;core cells&quot; according to the following rules:</span>
+<span class="doccomment">///     * If there are two points in the two cells that have distance between them at most `tolerance` then the arc is added to the graph;</span>
+<span class="doccomment">///     * If there are two points in the two cells that have distance between them that is between `tolerance` and `tolerance * (1 + slack)` then the arc is added arbitrarily to the graph;</span>
+<span class="doccomment">///     * Otherwise the arc is not added;</span>
+<span class="doccomment">/// * Every connected component of the graph is a cluster and every core point in the CC is given the label of that cluster.</span>
+<span class="doccomment">/// * For all the non-core points in the cells we search for any neighbouring core point (with the same arbirtary rule used to create the arcs)</span>
+<span class="doccomment">/// belonging to a cluster and, if at least one is found, then the non-core point is given the label of the cluster of the core-point. If no such core</span>
+<span class="doccomment">/// point is found then the point is a &quot;noise&quot; point and it is given a label of `None`.  </span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ## Tutorial</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Let&#39;s do a walkthrough of an example running the approximated DBSCAN on some data.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```rust</span>
+<span class="doccomment">/// use linfa_clustering::{AppxDbscan, generate_blobs};</span>
+<span class="doccomment">/// use linfa::traits::Transformer;</span>
+<span class="doccomment">/// use ndarray::{Axis, array, s};</span>
+<span class="doccomment">/// use ndarray_rand::rand::SeedableRng;</span>
+<span class="doccomment">/// use rand_isaac::Isaac64Rng;</span>
+<span class="doccomment">/// use approx::assert_abs_diff_eq;</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// // Our random number generator, seeded for reproducibility</span>
+<span class="doccomment">/// let seed = 42;</span>
+<span class="doccomment">/// let mut rng = Isaac64Rng::seed_from_u64(seed);</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// // `expected_centroids` has shape `(n_centroids, n_features)`</span>
+<span class="doccomment">/// // i.e. three points in the 2-dimensional plane</span>
+<span class="doccomment">/// let expected_centroids = array![[0., 1.], [-10., 20.], [-1., 10.]];</span>
+<span class="doccomment">/// // Let&#39;s generate a synthetic dataset: three blobs of observations</span>
+<span class="doccomment">/// // (100 points each) centered around our `expected_centroids`</span>
+<span class="doccomment">/// let observations = generate_blobs(100, &amp;expected_centroids, &amp;mut rng);</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// // Let&#39;s configure and run our AppxDbscan algorithm</span>
+<span class="doccomment">/// // We use the builder pattern to specify the hyperparameters</span>
+<span class="doccomment">/// // `min_points` is the only mandatory parameter.</span>
+<span class="doccomment">/// // If you don&#39;t specify the others (e.g. `tolerance`, `slack`)</span>
+<span class="doccomment">/// // default values will be used.</span>
+<span class="doccomment">/// let min_points = 3;</span>
+<span class="doccomment">/// let params = AppxDbscan::params(min_points).tolerance(1e-2).slack(1e-3).build();</span>
+<span class="doccomment">/// // Let&#39;s run the algorithm!</span>
+<span class="doccomment">/// let labels = params.transform(&amp;observations);</span>
+<span class="doccomment">/// // Points are `None` if noise `Some(id)` if belonging to a cluster.</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">///</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AppxDbscan</span>;
+
+<span class="kw">impl</span> <span class="ident">AppxDbscan</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">params</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Float</span><span class="op">&gt;</span>(<span class="ident">min_points</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">AppxDbscanHyperParamsBuilder</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span> {
+        <span class="ident">AppxDbscanHyperParams</span>::<span class="ident">new</span>(<span class="ident">min_points</span>)
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Float</span>, <span class="ident">D</span>: <span class="ident">Data</span><span class="op">&lt;</span><span class="ident">Elem</span> <span class="op">=</span> <span class="ident">F</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">Transformer</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">ArrayBase</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">Ix2</span><span class="op">&gt;</span>, <span class="ident">Array1</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>
+    <span class="kw">for</span> <span class="ident">AppxDbscanHyperParams</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>
+{
+    <span class="kw">fn</span> <span class="ident">transform</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">observations</span>: <span class="kw-2">&amp;</span><span class="ident">ArrayBase</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">Ix2</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Array1</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="ident">observations</span>.<span class="ident">dim</span>().<span class="number">0</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
+            <span class="kw">return</span> <span class="ident">Array1</span>::<span class="ident">from_elem</span>(<span class="number">0</span>, <span class="prelude-val">None</span>);
+        }
+        <span class="kw">let</span> <span class="ident">labeler</span> <span class="op">=</span> <span class="ident">AppxDbscanLabeler</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">observations</span>.<span class="ident">view</span>(), <span class="kw-2">&amp;</span><span class="self">self</span>);
+        <span class="ident">labeler</span>.<span class="ident">labels</span>().<span class="ident">clone</span>()
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Float</span>, <span class="ident">D</span>: <span class="ident">Data</span><span class="op">&lt;</span><span class="ident">Elem</span> <span class="op">=</span> <span class="ident">F</span><span class="op">&gt;</span>, <span class="ident">T</span><span class="op">&gt;</span>
+    <span class="ident">Transformer</span><span class="op">&lt;</span>
+        <span class="ident">DatasetBase</span><span class="op">&lt;</span><span class="ident">ArrayBase</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">Ix2</span><span class="op">&gt;</span>, <span class="ident">T</span><span class="op">&gt;</span>,
+        <span class="ident">DatasetBase</span><span class="op">&lt;</span><span class="ident">ArrayBase</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">Ix2</span><span class="op">&gt;</span>, <span class="ident">Array1</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">AppxDbscanHyperParams</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>
+{
+    <span class="kw">fn</span> <span class="ident">transform</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">dataset</span>: <span class="ident">DatasetBase</span><span class="op">&lt;</span><span class="ident">ArrayBase</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">Ix2</span><span class="op">&gt;</span>, <span class="ident">T</span><span class="op">&gt;</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">DatasetBase</span><span class="op">&lt;</span><span class="ident">ArrayBase</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">Ix2</span><span class="op">&gt;</span>, <span class="ident">Array1</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">predicted</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">transform</span>(<span class="ident">dataset</span>.<span class="ident">records</span>());
+        <span class="ident">dataset</span>.<span class="ident">with_targets</span>(<span class="ident">predicted</span>)
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Float</span>, <span class="ident">D</span>: <span class="ident">Data</span><span class="op">&lt;</span><span class="ident">Elem</span> <span class="op">=</span> <span class="ident">F</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">Transformer</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">ArrayBase</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">Ix2</span><span class="op">&gt;</span>, <span class="ident">Array1</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>
+    <span class="kw">for</span> <span class="ident">AppxDbscanHyperParamsBuilder</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>
+{
+    <span class="kw">fn</span> <span class="ident">transform</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">observations</span>: <span class="kw-2">&amp;</span><span class="ident">ArrayBase</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">Ix2</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Array1</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">build</span>().<span class="ident">transform</span>(<span class="ident">observations</span>)
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Float</span>, <span class="ident">D</span>: <span class="ident">Data</span><span class="op">&lt;</span><span class="ident">Elem</span> <span class="op">=</span> <span class="ident">F</span><span class="op">&gt;</span>, <span class="ident">T</span><span class="op">&gt;</span>
+    <span class="ident">Transformer</span><span class="op">&lt;</span>
+        <span class="ident">DatasetBase</span><span class="op">&lt;</span><span class="ident">ArrayBase</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">Ix2</span><span class="op">&gt;</span>, <span class="ident">T</span><span class="op">&gt;</span>,
+        <span class="ident">DatasetBase</span><span class="op">&lt;</span><span class="ident">ArrayBase</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">Ix2</span><span class="op">&gt;</span>, <span class="ident">Array1</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">AppxDbscanHyperParamsBuilder</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>
+{
+    <span class="kw">fn</span> <span class="ident">transform</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">dataset</span>: <span class="ident">DatasetBase</span><span class="op">&lt;</span><span class="ident">ArrayBase</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">Ix2</span><span class="op">&gt;</span>, <span class="ident">T</span><span class="op">&gt;</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">DatasetBase</span><span class="op">&lt;</span><span class="ident">ArrayBase</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">Ix2</span><span class="op">&gt;</span>, <span class="ident">Array1</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">build</span>().<span class="ident">transform</span>(<span class="ident">dataset</span>)
+    }
+}
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="linfa_clustering" data-search-js="../../../search-index.js"></div>
+    <script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script></body></html>

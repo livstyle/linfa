@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="linfa,ml,stats,statistical learning, machine learning,rust">
+  <meta name="description" content="comprehensive toolkit for statistical learning in rust">
+  <title>Linfa Toolkit</title>
+
+  <link rel="icon" href="mascot.svg">
+  <link rel="stylesheet" href="https://rust-ml.github.io/linfa/style.css">
+  <script src="https://rust-ml.github.io/linfa/code-examples.js"></script>
+</head>
+
+<body>
+  <div class="top">
+      <section class="grid header">
+          <div class="logo">
+              <img alt="logo" src="https://rust-ml.github.io/linfa/mascot.svg" height=60>
+            <p>
+                Linfa
+                
+                <span>Menu</span>
+            </p>
+          </div>
+          <div class="header-main">
+              <ul>
+                  <li><a href="https://rust-ml.github.io/linfa">Home</a></li>
+                  <li><a href="https://rust-ml.github.io/linfa/about">About</a></li>
+                  <li><a href="https://rust-ml.github.io/linfa/docs">Documentation</a></li>
+                  <li><a href="https://rust-ml.github.io/linfa/community">Community</a></li>
+                  <li><a href="https://rust-ml.github.io/linfa/news">News</a></li>
+              </ul>
+          </div>
+      </section>
+  </div>
+
+
+  <section class="section">
+    <div class="container">
+      
+<div class="expose"><div class="grid">
+<div class="introduction">
+    <h1>A comprehensive toolkit for Statistical Learning in Rust.</h1>
+    <p>
+    Linfa is a comprehensive toolkit for statistical learning, providing algorithms for optimal model and density estimation.
+    </p>
+    <p>
+    It contains common learning algorithms such as Elastic Net, Support Vector Machines, Kernel Methods, Linear Decision Trees, etc. and bundles them together.
+    </p>
+    <p>
+    You can find the source code at <a href="https://github.com/rust-ml/linfa">rust-ml/linfa</a>.
+   </p>
+</div>
+<div class="code-examples">
+    <select title="Choose a code example to display">
+        
+        
+        
+            <option data-example="Gaussian Naive Bayes" selected="selected">
+        
+
+            Gaussian Naive Bayes
+        </option>
+        
+        
+            <option data-example="Multi Targets">
+        
+
+            Multi Targets
+        </option>
+        
+        
+            <option data-example="Barnes-Hut t-SNE">
+        
+
+            Barnes-Hut t-SNE
+        </option>
+        
+        
+            <option data-example="K folding">
+        
+
+            K folding
+        </option>
+        
+        
+            <option data-example="Diffusion Maps">
+        
+
+            Diffusion Maps
+        </option>
+        
+        
+            <option data-example="Multi Class">
+        
+
+            Multi Class
+        </option>
+        
+        
+            <option data-example="Cross Validation">
+        
+
+            Cross Validation
+        </option>
+        
+        
+            <option data-example="Support Vector Machines">
+        
+
+            Support Vector Machines
+        </option>
+        
+        
+            <option data-example="Elastic Net">
+        
+
+            Elastic Net
+        </option>
+        
+        
+            <option data-example="Partial least squares regression">
+        
+
+            Partial least squares regression
+        </option>
+        
+        
+            <option data-example="Linear Decision Trees">
+        
+
+            Linear Decision Trees
+        </option>
+        
+    </select>
+        
+        
+            <div class="example visible" data-example="Gaussian Naive Bayes">
+        
+            <pre style="background-color:#ffffff;">
+<code class="language-rust" data-lang="rust"><span style="font-weight:bold;color:#a71d5d;">let </span><span style="color:#323232;">(train, valid) </span><span style="font-weight:bold;color:#a71d5d;">= </span><span style="color:#323232;">linfa_datasets::iris()
+    .</span><span style="color:#62a35c;">split_with_ratio</span><span style="color:#323232;">(</span><span style="color:#0086b3;">0.8</span><span style="color:#323232;">);
+
+</span><span style="font-style:italic;color:#969896;">// train the model
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> model </span><span style="font-weight:bold;color:#a71d5d;">= </span><span style="color:#323232;">GaussianNbParams::params()
+    .</span><span style="color:#62a35c;">fit</span><span style="color:#323232;">(</span><span style="font-weight:bold;color:#a71d5d;">&amp;</span><span style="color:#323232;">train)</span><span style="font-weight:bold;color:#a71d5d;">?</span><span style="color:#323232;">;
+
+</span><span style="font-style:italic;color:#969896;">// Predict the validation dataset
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> pred </span><span style="font-weight:bold;color:#a71d5d;">=</span><span style="color:#323232;"> model.</span><span style="color:#62a35c;">predict</span><span style="color:#323232;">(</span><span style="font-weight:bold;color:#a71d5d;">&amp;</span><span style="color:#323232;">valid);
+
+</span><span style="font-style:italic;color:#969896;">// construct confusion matrix
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> cm </span><span style="font-weight:bold;color:#a71d5d;">=</span><span style="color:#323232;"> pred.</span><span style="color:#62a35c;">confusion_matrix</span><span style="color:#323232;">(</span><span style="font-weight:bold;color:#a71d5d;">&amp;</span><span style="color:#323232;">valid)</span><span style="font-weight:bold;color:#a71d5d;">?</span><span style="color:#323232;">;
+
+</span><span style="font-style:italic;color:#969896;">// print confusion matrix, accuracy and precision
+</span><span style="color:#323232;">println!(</span><span style="color:#183691;">&quot;</span><span style="color:#0086b3;">{:?}</span><span style="color:#183691;">&quot;</span><span style="color:#323232;">, cm);
+println!(</span><span style="color:#183691;">&quot;accuracy </span><span style="color:#0086b3;">{}</span><span style="color:#183691;">, precision </span><span style="color:#0086b3;">{}</span><span style="color:#183691;">&quot;</span><span style="color:#323232;">, 
+    cm.</span><span style="color:#62a35c;">accuracy</span><span style="color:#323232;">(), cm.</span><span style="color:#62a35c;">precision</span><span style="color:#323232;">());
+</span></code></pre>
+        </div>
+        
+        
+            <div class="example" data-example="Multi Targets">
+        
+            <pre style="background-color:#ffffff;">
+<code class="language-rust" data-lang="rust"><span style="font-style:italic;color:#969896;">// assume we have a dataset with multiple,
+// uncorrelated targets and we want to train
+// a single model for each target variable
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> model </span><span style="font-weight:bold;color:#a71d5d;">=</span><span style="color:#323232;"> train.</span><span style="color:#62a35c;">target_iter</span><span style="color:#323232;">()
+    .</span><span style="color:#62a35c;">map</span><span style="color:#323232;">(|x| params.</span><span style="color:#62a35c;">fit</span><span style="color:#323232;">(</span><span style="font-weight:bold;color:#a71d5d;">&amp;</span><span style="color:#323232;">x).</span><span style="color:#62a35c;">unwrap</span><span style="color:#323232;">())
+    .collect::&lt;MultiTarget&lt;</span><span style="font-weight:bold;color:#a71d5d;">_</span><span style="color:#323232;">, </span><span style="font-weight:bold;color:#a71d5d;">_</span><span style="color:#323232;">&gt;&gt;()</span><span style="font-weight:bold;color:#a71d5d;">?</span><span style="color:#323232;">;
+
+</span><span style="font-style:italic;color:#969896;">// composing `model` returns multiple targets
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> valid_est </span><span style="font-weight:bold;color:#a71d5d;">=</span><span style="color:#323232;"> model.</span><span style="color:#62a35c;">predict</span><span style="color:#323232;">(valid);
+println!(</span><span style="color:#183691;">&quot;</span><span style="color:#0086b3;">{}</span><span style="color:#183691;">&quot;</span><span style="color:#323232;">, valid_est.</span><span style="color:#62a35c;">ntargets</span><span style="color:#323232;">());
+</span></code></pre>
+        </div>
+        
+        
+            <div class="example" data-example="Barnes-Hut t-SNE">
+        
+            <pre style="background-color:#ffffff;">
+<code class="language-rust" data-lang="rust"><span style="font-style:italic;color:#969896;">// normalize the iris dataset
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> ds </span><span style="font-weight:bold;color:#a71d5d;">= </span><span style="color:#323232;">linfa_datasets::iris();
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> ds </span><span style="font-weight:bold;color:#a71d5d;">= </span><span style="color:#323232;">Pca::params(</span><span style="color:#0086b3;">3</span><span style="color:#323232;">).</span><span style="color:#62a35c;">whiten</span><span style="color:#323232;">(</span><span style="color:#0086b3;">true</span><span style="color:#323232;">).</span><span style="color:#62a35c;">fit</span><span style="color:#323232;">(</span><span style="font-weight:bold;color:#a71d5d;">&amp;</span><span style="color:#323232;">ds).</span><span style="color:#62a35c;">transform</span><span style="color:#323232;">(ds);
+
+</span><span style="font-style:italic;color:#969896;">// transform to two-dimensional embeddings
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> ds </span><span style="font-weight:bold;color:#a71d5d;">= </span><span style="color:#323232;">TSne::embedding_size(</span><span style="color:#0086b3;">2</span><span style="color:#323232;">)
+    .</span><span style="color:#62a35c;">perplexity</span><span style="color:#323232;">(</span><span style="color:#0086b3;">10.0</span><span style="color:#323232;">)
+    .</span><span style="color:#62a35c;">approx_threshold</span><span style="color:#323232;">(</span><span style="color:#0086b3;">0.1</span><span style="color:#323232;">)
+    .</span><span style="color:#62a35c;">transform</span><span style="color:#323232;">(ds)</span><span style="font-weight:bold;color:#a71d5d;">?</span><span style="color:#323232;">;
+
+</span><span style="font-style:italic;color:#969896;">// write embedding to file
+</span><span style="font-weight:bold;color:#a71d5d;">let mut</span><span style="color:#323232;"> f </span><span style="font-weight:bold;color:#a71d5d;">= </span><span style="color:#323232;">File::create(</span><span style="color:#183691;">&quot;iris.dat&quot;</span><span style="color:#323232;">)</span><span style="font-weight:bold;color:#a71d5d;">?</span><span style="color:#323232;">;
+</span><span style="font-weight:bold;color:#a71d5d;">for </span><span style="color:#323232;">(x, y) </span><span style="font-weight:bold;color:#a71d5d;">in</span><span style="color:#323232;"> ds.</span><span style="color:#62a35c;">sample_iter</span><span style="color:#323232;">() {
+    f.</span><span style="color:#62a35c;">write</span><span style="color:#323232;">(format!(</span><span style="color:#183691;">&quot;</span><span style="color:#0086b3;">{} {} {}\n</span><span style="color:#183691;">&quot;</span><span style="color:#323232;">, x[</span><span style="color:#0086b3;">0</span><span style="color:#323232;">], x[</span><span style="color:#0086b3;">1</span><span style="color:#323232;">], y[</span><span style="color:#0086b3;">0</span><span style="color:#323232;">]).</span><span style="color:#62a35c;">as_bytes</span><span style="color:#323232;">())</span><span style="font-weight:bold;color:#a71d5d;">?</span><span style="color:#323232;">;
+}
+</span></code></pre>
+        </div>
+        
+        
+            <div class="example" data-example="K folding">
+        
+            <pre style="background-color:#ffffff;">
+<code class="language-rust" data-lang="rust"><span style="font-style:italic;color:#969896;">// perform cross-validation with the F1 score
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> f1_runs </span><span style="font-weight:bold;color:#a71d5d;">=</span><span style="color:#323232;"> dataset
+    .</span><span style="color:#62a35c;">iter_fold</span><span style="color:#323232;">(</span><span style="color:#0086b3;">8</span><span style="color:#323232;">, |v| params.</span><span style="color:#62a35c;">fit</span><span style="color:#323232;">(</span><span style="font-weight:bold;color:#a71d5d;">&amp;</span><span style="color:#323232;">v).</span><span style="color:#62a35c;">unwrap</span><span style="color:#323232;">())
+    .</span><span style="color:#62a35c;">map</span><span style="color:#323232;">(|(model, valid)| {
+        </span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> cm </span><span style="font-weight:bold;color:#a71d5d;">=</span><span style="color:#323232;"> model
+            .</span><span style="color:#62a35c;">predict</span><span style="color:#323232;">(</span><span style="font-weight:bold;color:#a71d5d;">&amp;</span><span style="color:#323232;">valid)
+            .</span><span style="color:#62a35c;">mapv</span><span style="color:#323232;">(|x| x </span><span style="font-weight:bold;color:#a71d5d;">&gt; </span><span style="color:#323232;">Pr::even())
+            .</span><span style="color:#62a35c;">confusion_matrix</span><span style="color:#323232;">(</span><span style="font-weight:bold;color:#a71d5d;">&amp;</span><span style="color:#323232;">valid).</span><span style="color:#62a35c;">unwrap</span><span style="color:#323232;">();
+  
+          cm.</span><span style="color:#62a35c;">f1_score</span><span style="color:#323232;">()
+    })  
+    .collect::&lt;Array1&lt;</span><span style="font-weight:bold;color:#a71d5d;">_</span><span style="color:#323232;">&gt;&gt;();
+  
+</span><span style="font-style:italic;color:#969896;">// calculate mean and standard deviation
+</span><span style="color:#323232;">println!(</span><span style="color:#183691;">&quot;F1 score: </span><span style="color:#0086b3;">{}</span><span style="color:#183691;">±</span><span style="color:#0086b3;">{}</span><span style="color:#183691;">&quot;</span><span style="color:#323232;">,
+    f1_runs.</span><span style="color:#62a35c;">mean</span><span style="color:#323232;">().</span><span style="color:#62a35c;">unwrap</span><span style="color:#323232;">(),
+    f1_runs.</span><span style="color:#62a35c;">std_axis</span><span style="color:#323232;">(Axis(</span><span style="color:#0086b3;">0</span><span style="color:#323232;">), </span><span style="color:#0086b3;">0.0</span><span style="color:#323232;">),
+);  
+</span></code></pre>
+        </div>
+        
+        
+            <div class="example" data-example="Diffusion Maps">
+        
+            <pre style="background-color:#ffffff;">
+<code class="language-rust" data-lang="rust"><span style="font-style:italic;color:#969896;">// generate RBF kernel with sparsity constraints
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> kernel </span><span style="font-weight:bold;color:#a71d5d;">= </span><span style="color:#323232;">Kernel::params()
+    .</span><span style="color:#62a35c;">kind</span><span style="color:#323232;">(KernelType::Sparse(</span><span style="color:#0086b3;">15</span><span style="color:#323232;">))
+    .</span><span style="color:#62a35c;">method</span><span style="color:#323232;">(KernelMethod::Gaussian(</span><span style="color:#0086b3;">2.0</span><span style="color:#323232;">))
+    .</span><span style="color:#62a35c;">transform</span><span style="color:#323232;">(dataset.</span><span style="color:#62a35c;">view</span><span style="color:#323232;">());
+
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> embedding </span><span style="font-weight:bold;color:#a71d5d;">= </span><span style="color:#323232;">DiffusionMap::&lt;</span><span style="font-weight:bold;color:#a71d5d;">f64</span><span style="color:#323232;">&gt;::params(</span><span style="color:#0086b3;">2</span><span style="color:#323232;">)
+    .</span><span style="color:#62a35c;">steps</span><span style="color:#323232;">(</span><span style="color:#0086b3;">1</span><span style="color:#323232;">)
+    .</span><span style="color:#62a35c;">transform</span><span style="color:#323232;">(</span><span style="font-weight:bold;color:#a71d5d;">&amp;</span><span style="color:#323232;">kernel)</span><span style="font-weight:bold;color:#a71d5d;">?</span><span style="color:#323232;">;
+
+</span><span style="font-style:italic;color:#969896;">// get embedding
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> embedding </span><span style="font-weight:bold;color:#a71d5d;">=</span><span style="color:#323232;"> embedding.</span><span style="color:#62a35c;">embedding</span><span style="color:#323232;">();
+</span></code></pre>
+        </div>
+        
+        
+            <div class="example" data-example="Multi Class">
+        
+            <pre style="background-color:#ffffff;">
+<code class="language-rust" data-lang="rust"><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> params </span><span style="font-weight:bold;color:#a71d5d;">= </span><span style="color:#323232;">Svm::&lt;</span><span style="font-weight:bold;color:#a71d5d;">_</span><span style="color:#323232;">, Pr&gt;::params()
+    .</span><span style="color:#62a35c;">gaussian_kernel</span><span style="color:#323232;">(</span><span style="color:#0086b3;">30.0</span><span style="color:#323232;">);
+
+</span><span style="font-style:italic;color:#969896;">// assume we have a binary decision model (here SVM) 
+// predicting probability. We can merge them into a 
+// multi-class model by collecting several of them
+// into a `MultiClassModel`
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> model </span><span style="font-weight:bold;color:#a71d5d;">=</span><span style="color:#323232;"> train
+    .</span><span style="color:#62a35c;">one_vs_all</span><span style="color:#323232;">()</span><span style="font-weight:bold;color:#a71d5d;">?
+    </span><span style="color:#323232;">.</span><span style="color:#62a35c;">into_iter</span><span style="color:#323232;">()
+    .</span><span style="color:#62a35c;">map</span><span style="color:#323232;">(|(l, x)| (l, params.</span><span style="color:#62a35c;">fit</span><span style="color:#323232;">(</span><span style="font-weight:bold;color:#a71d5d;">&amp;</span><span style="color:#323232;">x).</span><span style="color:#62a35c;">unwrap</span><span style="color:#323232;">()))
+    .collect::&lt;MultiClassModel&lt;</span><span style="font-weight:bold;color:#a71d5d;">_</span><span style="color:#323232;">, </span><span style="font-weight:bold;color:#a71d5d;">_</span><span style="color:#323232;">&gt;&gt;();
+
+</span><span style="font-style:italic;color:#969896;">// predict multi-class label
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> pred </span><span style="font-weight:bold;color:#a71d5d;">=</span><span style="color:#323232;"> model.</span><span style="color:#62a35c;">predict</span><span style="color:#323232;">(</span><span style="font-weight:bold;color:#a71d5d;">&amp;</span><span style="color:#323232;">valid);
+</span></code></pre>
+        </div>
+        
+        
+            <div class="example" data-example="Cross Validation">
+        
+            <pre style="background-color:#ffffff;">
+<code class="language-rust" data-lang="rust"><span style="font-style:italic;color:#969896;">// parameters to compare
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> ratios </span><span style="font-weight:bold;color:#a71d5d;">= </span><span style="color:#323232;">vec![</span><span style="color:#0086b3;">0.1</span><span style="color:#323232;">, </span><span style="color:#0086b3;">0.2</span><span style="color:#323232;">, </span><span style="color:#0086b3;">0.5</span><span style="color:#323232;">, </span><span style="color:#0086b3;">0.7</span><span style="color:#323232;">, </span><span style="color:#0086b3;">1.0</span><span style="color:#323232;">];
+
+</span><span style="font-style:italic;color:#969896;">// create a model for each parameter
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> models </span><span style="font-weight:bold;color:#a71d5d;">=</span><span style="color:#323232;"> ratios
+    .</span><span style="color:#62a35c;">iter</span><span style="color:#323232;">()
+    .</span><span style="color:#62a35c;">map</span><span style="color:#323232;">(|ratio| ElasticNet::params().</span><span style="color:#62a35c;">penalty</span><span style="color:#323232;">(</span><span style="color:#0086b3;">0.3</span><span style="color:#323232;">).</span><span style="color:#62a35c;">l1_ratio</span><span style="color:#323232;">(</span><span style="font-weight:bold;color:#a71d5d;">*</span><span style="color:#323232;">ratio))
+    .collect::&lt;</span><span style="color:#0086b3;">Vec</span><span style="color:#323232;">&lt;</span><span style="font-weight:bold;color:#a71d5d;">_</span><span style="color:#323232;">&gt;&gt;();
+
+</span><span style="font-style:italic;color:#969896;">// get the mean r2 validation score across 5 folds for each model
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> r2_values </span><span style="font-weight:bold;color:#a71d5d;">=
+</span><span style="color:#323232;">    dataset.</span><span style="color:#62a35c;">cross_validate</span><span style="color:#323232;">(</span><span style="color:#0086b3;">5</span><span style="color:#323232;">, </span><span style="font-weight:bold;color:#a71d5d;">&amp;</span><span style="color:#323232;">models, |prediction, truth| prediction.</span><span style="color:#62a35c;">r2</span><span style="color:#323232;">(</span><span style="font-weight:bold;color:#a71d5d;">&amp;</span><span style="color:#323232;">truth))</span><span style="font-weight:bold;color:#a71d5d;">?</span><span style="color:#323232;">;
+
+</span><span style="font-style:italic;color:#969896;">// show the mean r2 score for each parameter choice
+</span><span style="font-weight:bold;color:#a71d5d;">for </span><span style="color:#323232;">(ratio, r2) </span><span style="font-weight:bold;color:#a71d5d;">in</span><span style="color:#323232;"> ratios.</span><span style="color:#62a35c;">iter</span><span style="color:#323232;">().</span><span style="color:#62a35c;">zip</span><span style="color:#323232;">(r2_values.</span><span style="color:#62a35c;">iter</span><span style="color:#323232;">()) {
+    println!(</span><span style="color:#183691;">&quot;L1 ratio: </span><span style="color:#0086b3;">{}</span><span style="color:#183691;">, r2 score: </span><span style="color:#0086b3;">{}</span><span style="color:#183691;">&quot;</span><span style="color:#323232;">, ratio, r2);
+}
+</span></code></pre>
+        </div>
+        
+        
+            <div class="example" data-example="Support Vector Machines">
+        
+            <pre style="background-color:#ffffff;">
+<code class="language-rust" data-lang="rust"><span style="font-style:italic;color:#969896;">// everything above 6.5 is considered a good wine
+</span><span style="font-weight:bold;color:#a71d5d;">let </span><span style="color:#323232;">(train, valid) </span><span style="font-weight:bold;color:#a71d5d;">= </span><span style="color:#323232;">linfa_datasets::winequality()
+    .</span><span style="color:#62a35c;">map_targets</span><span style="color:#323232;">(|x| </span><span style="font-weight:bold;color:#a71d5d;">*</span><span style="color:#323232;">x </span><span style="font-weight:bold;color:#a71d5d;">&gt; </span><span style="color:#0086b3;">6</span><span style="color:#323232;">)
+    .</span><span style="color:#62a35c;">split_with_ratio</span><span style="color:#323232;">(</span><span style="color:#0086b3;">0.9</span><span style="color:#323232;">);
+
+</span><span style="font-style:italic;color:#969896;">// train SVM with nu=0.01 and RBF with eps=80.0
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> model </span><span style="font-weight:bold;color:#a71d5d;">= </span><span style="color:#323232;">Svm::params()
+    .</span><span style="color:#62a35c;">nu_weight</span><span style="color:#323232;">(</span><span style="color:#0086b3;">0.01</span><span style="color:#323232;">)
+    .</span><span style="color:#62a35c;">gaussian_kernel</span><span style="color:#323232;">(</span><span style="color:#0086b3;">80.0</span><span style="color:#323232;">)
+    .</span><span style="color:#62a35c;">fit</span><span style="color:#323232;">(</span><span style="font-weight:bold;color:#a71d5d;">&amp;</span><span style="color:#323232;">train)</span><span style="font-weight:bold;color:#a71d5d;">?</span><span style="color:#323232;">;
+
+</span><span style="font-style:italic;color:#969896;">// print model performance and number of SVs
+</span><span style="color:#323232;">println!(</span><span style="color:#183691;">&quot;</span><span style="color:#0086b3;">{}</span><span style="color:#183691;">&quot;</span><span style="color:#323232;">, model);
+</span></code></pre>
+        </div>
+        
+        
+            <div class="example" data-example="Elastic Net">
+        
+            <pre style="background-color:#ffffff;">
+<code class="language-rust" data-lang="rust"><span style="font-weight:bold;color:#a71d5d;">let </span><span style="color:#323232;">(train, valid) </span><span style="font-weight:bold;color:#a71d5d;">= </span><span style="color:#323232;">linfa_datasets::diabetes()
+    .</span><span style="color:#62a35c;">split_with_ratio</span><span style="color:#323232;">(</span><span style="color:#0086b3;">0.9</span><span style="color:#323232;">);
+
+</span><span style="font-style:italic;color:#969896;">// train pure LASSO model with 0.1 penalty
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> model </span><span style="font-weight:bold;color:#a71d5d;">= </span><span style="color:#323232;">ElasticNet::params()
+    .</span><span style="color:#62a35c;">penalty</span><span style="color:#323232;">(</span><span style="color:#0086b3;">0.1</span><span style="color:#323232;">)
+    .</span><span style="color:#62a35c;">l1_ratio</span><span style="color:#323232;">(</span><span style="color:#0086b3;">1.0</span><span style="color:#323232;">)
+    .</span><span style="color:#62a35c;">fit</span><span style="color:#323232;">(</span><span style="font-weight:bold;color:#a71d5d;">&amp;</span><span style="color:#323232;">train)</span><span style="font-weight:bold;color:#a71d5d;">?</span><span style="color:#323232;">;
+
+println!(</span><span style="color:#183691;">&quot;z score: </span><span style="color:#0086b3;">{:?}</span><span style="color:#183691;">&quot;</span><span style="color:#323232;">, model.</span><span style="color:#62a35c;">z_score</span><span style="color:#323232;">());
+
+</span><span style="font-style:italic;color:#969896;">// validate
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> y_est </span><span style="font-weight:bold;color:#a71d5d;">=</span><span style="color:#323232;"> model.</span><span style="color:#62a35c;">predict</span><span style="color:#323232;">(</span><span style="font-weight:bold;color:#a71d5d;">&amp;</span><span style="color:#323232;">valid);
+println!(</span><span style="color:#183691;">&quot;predicted variance: </span><span style="color:#0086b3;">{}</span><span style="color:#183691;">&quot;</span><span style="color:#323232;">, y_est.</span><span style="color:#62a35c;">r2</span><span style="color:#323232;">(</span><span style="font-weight:bold;color:#a71d5d;">&amp;</span><span style="color:#323232;">valid)</span><span style="font-weight:bold;color:#a71d5d;">?</span><span style="color:#323232;">);
+</span></code></pre>
+        </div>
+        
+        
+            <div class="example" data-example="Partial least squares regression">
+        
+            <pre style="background-color:#ffffff;">
+<code class="language-rust" data-lang="rust"><span style="font-style:italic;color:#969896;">// Load linnerud dataset with  20 samples, 
+// 3 input features, 3 output features
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> ds </span><span style="font-weight:bold;color:#a71d5d;">= </span><span style="color:#323232;">linfa_datasets::linnerud();
+
+</span><span style="font-style:italic;color:#969896;">// Fit PLS2 method using 2 principal components 
+// (latent variables)
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> pls </span><span style="font-weight:bold;color:#a71d5d;">= </span><span style="color:#323232;">PlsRegression::params(</span><span style="color:#0086b3;">2</span><span style="color:#323232;">).</span><span style="color:#62a35c;">fit</span><span style="color:#323232;">(</span><span style="font-weight:bold;color:#a71d5d;">&amp;</span><span style="color:#323232;">ds)</span><span style="font-weight:bold;color:#a71d5d;">?</span><span style="color:#323232;">;
+
+</span><span style="font-style:italic;color:#969896;">// We can either apply the dimension reduction to the dataset
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> reduced_ds </span><span style="font-weight:bold;color:#a71d5d;">=</span><span style="color:#323232;"> pls.</span><span style="color:#62a35c;">transform</span><span style="color:#323232;">(ds);
+
+</span><span style="font-style:italic;color:#969896;">// ... or predict outputs given a new input sample.
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> exercices </span><span style="font-weight:bold;color:#a71d5d;">= </span><span style="color:#323232;">array![[</span><span style="color:#0086b3;">14.</span><span style="color:#323232;">, </span><span style="color:#0086b3;">146.</span><span style="color:#323232;">, </span><span style="color:#0086b3;">61.</span><span style="color:#323232;">], [</span><span style="color:#0086b3;">6.</span><span style="color:#323232;">, </span><span style="color:#0086b3;">80.</span><span style="color:#323232;">, </span><span style="color:#0086b3;">60.</span><span style="color:#323232;">]];
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> physio_measures </span><span style="font-weight:bold;color:#a71d5d;">=</span><span style="color:#323232;"> pls.</span><span style="color:#62a35c;">predict</span><span style="color:#323232;">(exercices);
+</span></code></pre>
+        </div>
+        
+        
+            <div class="example" data-example="Linear Decision Trees">
+        
+            <pre style="background-color:#ffffff;">
+<code class="language-rust" data-lang="rust"><span style="font-weight:bold;color:#a71d5d;">let </span><span style="color:#323232;">(train, valid) </span><span style="font-weight:bold;color:#a71d5d;">= </span><span style="color:#323232;">linfa_datasets::iris()
+    .</span><span style="color:#62a35c;">split_with_ratio</span><span style="color:#323232;">(</span><span style="color:#0086b3;">0.8</span><span style="color:#323232;">);
+
+</span><span style="font-style:italic;color:#969896;">// Train model with Gini criterion
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> gini_model </span><span style="font-weight:bold;color:#a71d5d;">= </span><span style="color:#323232;">DecisionTree::params()
+    .</span><span style="color:#62a35c;">split_quality</span><span style="color:#323232;">(SplitQuality::Gini)
+    .</span><span style="color:#62a35c;">max_depth</span><span style="color:#323232;">(</span><span style="color:#0086b3;">Some</span><span style="color:#323232;">(</span><span style="color:#0086b3;">100</span><span style="color:#323232;">))
+    .</span><span style="color:#62a35c;">min_weight_split</span><span style="color:#323232;">(</span><span style="color:#0086b3;">1.0</span><span style="color:#323232;">)
+    .</span><span style="color:#62a35c;">fit</span><span style="color:#323232;">(</span><span style="font-weight:bold;color:#a71d5d;">&amp;</span><span style="color:#323232;">train)</span><span style="font-weight:bold;color:#a71d5d;">?</span><span style="color:#323232;">;
+
+</span><span style="font-weight:bold;color:#a71d5d;">let</span><span style="color:#323232;"> cm </span><span style="font-weight:bold;color:#a71d5d;">=</span><span style="color:#323232;"> gini_model.</span><span style="color:#62a35c;">predict</span><span style="color:#323232;">(</span><span style="font-weight:bold;color:#a71d5d;">&amp;</span><span style="color:#323232;">valid)
+    .</span><span style="color:#62a35c;">confusion_matrix</span><span style="color:#323232;">(</span><span style="font-weight:bold;color:#a71d5d;">&amp;</span><span style="color:#323232;">valid);
+
+println!(</span><span style="color:#183691;">&quot;</span><span style="color:#0086b3;">{:?}</span><span style="color:#183691;">&quot;</span><span style="color:#323232;">, cm);
+println!(</span><span style="color:#183691;">&quot;Accuracy </span><span style="color:#0086b3;">{}</span><span style="color:#183691;">%&quot;</span><span style="color:#323232;">, cm.</span><span style="color:#62a35c;">accuracy</span><span style="color:#323232;">() </span><span style="font-weight:bold;color:#a71d5d;">* </span><span style="color:#0086b3;">100.0</span><span style="color:#323232;">);
+</span></code></pre>
+        </div>
+        
+</div>
+</div></div>
+<div class="highlights">
+<div class="colored"><div class="grid">
+    <section>
+        <h2>Fast by default</h2>
+        <p>The Rust language allows us to implement everything directly without the need to trade performance for readability.</p>
+        <p>No need to have a second language for performance reason.</p>
+    </section>
+    <section>
+        <h2>Embedded in the Rust ecosystem</h2>
+        <p>We use many existing tools from the Rust ecosystem to improve the code quality.</p>
+        <p>We are using <a href="https://github.com/rust-lang/rustfmt">rustfmt</a>, <a href="https://github.com/rust-lang/rust-clippy">clippy</a>, <a href="https://github.com/xd009642/tarpaulin">Tarpaulin</a>, Github Actions and <a href="https://docs.rs/approx/0.4.0/approx/">approx</a> for testing and verification.</p>
+    </section>
+    <section>
+        <h2>Reason more clearly</h2>
+        <p>Benefit from a clear ownership  model and structure your code flow with functional programming.</p>
+        <p>Many composing algorithms can be expressed more clearly with features missing in older imperative languages.</p>
+    </section>
+</div></div>
+<div class="not-colored"><div class="grid">
+    <section>
+        <h2>Published by <a href="https://github.com/rust-ml">rust-ml</a> group</h2>
+        <p>We are a group of ML/stats people who are exploring the language space for more performant and readable implementations.</p>
+    </section>
+    <section>
+        <h2>Beginner friendly</h2>
+        <p>No need to be an expert or have years of programming experience.</p>
+        <p>If you are interest in a specific implementation or need some inspiration to learn Rust for data processing reach out to us. We are happy to help on both sides.</p>
+    </section>
+    <section>
+        <h2>FOSS and accessible</h2>
+        <p>Everything is published under the Apache/MIT license and we are trying constantly to make the code as accessible as possible for humans and machines.</p>
+        <p>The development of Linfa happens in public and every contribution is welcome.</p>
+    </section>
+    </div></div>
+<div class="colored"><div class="grid">
+    <section>
+        <h2>Clustering</h2>
+        <p>Typical implementations for clustering algorithms, such as K-Means, Gaussian Mixture and DBSCAN.</p>
+    </section>
+    <section>
+        <h2>Dimensionality reduction</h2>
+        <p>Variance preserving algorithms with linear (PCA) and non-linear (Diffusion Maps) implementations.</p>
+        <p>The implementation uses LOBPCG and can handle high-dimensional data very efficiently.</p>
+    </section>
+    <section>
+        <h2>Target modeling</h2>
+        <p>Regression with shrinkage operators, such as LASSO and Ridge.</p>
+        <p>Classification of linear, as well as non-linear data with SVM and kernel-methods.</p>
+        <p>There are many more implementations, which you can find <a href="https://github.com/rust-ml/linfa#current-state">here</a>.</p>
+    </section>
+</div></div>
+</div>
+
+    </div>
+  </section>
+  <div class="bottom"><div class="grid">
+      <div class="footer">View
+          <a href="https://github.com/rust-ml/linfa/tree/master/docs/website">page source</a>
+          - any contribution is welcome!
+      </div>
+  </div></div>
+</body>
+</html>
